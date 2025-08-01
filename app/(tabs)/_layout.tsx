@@ -1,7 +1,7 @@
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Image,View } from 'react-native';
+import { Image, View } from 'react-native';
 
 const _layout = () => {
   return (
@@ -22,8 +22,26 @@ const _layout = () => {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: 'Student Profile',
           headerShown: true,
+          headerTitleStyle:{
+           fontSize: 24,
+           fontWeight: 'bold',
+           color:'#1e3a8a'     
+          },
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#FFFFFF'
+        },
+         headerRight: () => (
+      <View style={{ marginRight: 8 }}>
+        <Image
+          source={require('../../assets/images/logo.png')} // make sure the path is correct
+          style={{ width: 50, height: 50, borderRadius: 18 }}
+        />
+      </View>
+    ),
+          
           tabBarIcon: ({ color, size }) => (
             <Feather name="user" size={size} color={color} />
           ),
@@ -56,6 +74,23 @@ const _layout = () => {
         options={{
           title: 'Settings',
           headerShown: true,
+          headerTitleStyle:{
+           fontSize: 24,
+           fontWeight: 'bold',
+           color:'#1e3a8a'     
+          },
+        headerTitleAlign: 'center',
+        headerStyle: {
+          backgroundColor: '#FFFFFF'
+        },
+         headerRight: () => (
+      <View style={{ marginRight: 8 }}>
+        <Image
+          source={require('../../assets/images/logo.png')} // make sure the path is correct
+          style={{ width: 50, height: 50, borderRadius: 18 }}
+        />
+      </View>
+    ),
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="settings" size={size} color={color} />
           ),
