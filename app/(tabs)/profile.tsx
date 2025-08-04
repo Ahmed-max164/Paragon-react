@@ -13,7 +13,7 @@ const Profile = () => {
         <View className="items-center mt-8 mb-4">
           <View className="w-32 h-32 rounded-full overflow-hidden">
             <Image
-              source={require('../../assets/images/logo.png')} // replace with your image
+              source={require('../../assets/images/user.png')} // replace with your image
               className="w-full h-full"
               resizeMode="cover"
             />

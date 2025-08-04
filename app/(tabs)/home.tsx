@@ -20,7 +20,7 @@ const Home = () => {
     Students: '/stack/students',
     Teachers: '/stack/teachers',
     Attendance: '/stack/attendance',
-    Homework: '/stack/homework',
+    Homework : '/stack/homework',
     Results: '/stack/results',
     Fees: '/stack/fees',
     Circulars: '/stack/circulars',
