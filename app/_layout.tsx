@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { Image, View } from 'react-native';
 
 import './globals.css';
 
@@ -8,7 +9,61 @@ export default function RootLayout() {
     
       <><StatusBar style="dark" backgroundColor="#ffffff" /><Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="index" />
+      <Stack.Screen name="login" />
+      <Stack.Screen name="login_parent" />
       <Stack.Screen name="(tabs)" />
+       <Stack.Screen
+  name="welcome_parent"
+  options={{
+    headerShown: true,
+    title: 'Parent Dashboard',
+    headerTitleAlign: 'center',
+    headerStyle: {
+      backgroundColor: '#FFFFFF', // Background color
+    },
+    headerTitleStyle: {
+      fontWeight: 'bold',
+      fontSize: 20,
+      color: '#1e3a8a', // Text color
+    },
+    headerTintColor: '#000000', // Back button/icon color
+      headerRight: () => (
+          <View style={{ marginRight: 0 }}>
+            <Image
+              source={require('../assets/images/logo.png')} // make sure the path is correct
+              style={{ width: 50, height: 50, borderRadius: 18 }}
+            />
+          </View>
+        ),
+  }}
+/>
+
+      <Stack.Screen
+  name="welcome_teacher"
+  options={{
+    headerShown: true,
+    title: 'Teacher Dashboard',
+    headerTitleAlign: 'center',
+    headerStyle: {
+      backgroundColor: '#FFFFFF', // Background color
+    },
+    headerTitleStyle: {
+      fontWeight: 'bold',
+      fontSize: 20,
+      color: '#1e3a8a', // Text color
+    },
+    headerTintColor: '#000000', // Back button/icon color
+    headerRight: () => (
+          <View style={{ marginRight: 0 }}>
+            <Image
+              source={require('../assets/images/logo.png')} // make sure the path is correct
+              style={{ width: 50, height: 50, borderRadius: 18 }}
+            />
+          </View>
+        ),
+  }}
+/>
+
     </Stack></>
   
   );

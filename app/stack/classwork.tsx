@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, Image} from 'react-native'
 import React from 'react'
+import { Image, ScrollView, Text, View } from 'react-native'
 
 const classwork = () => {
   return (
