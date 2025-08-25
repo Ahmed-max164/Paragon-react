@@ -3,6 +3,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useUser } from "../contexts/UserContext";
+
 import {
   Image,
   KeyboardAvoidingView,
@@ -19,11 +21,15 @@ export default function Login() {
   const [secure, setSecure] = useState(true);
   const router = useRouter();
 
+    const { setUser } = useUser();
   const onSignIn = () => {
     if (!employno || !password) {
       alert("Please enter employee number and password");
       return;
     }
+    
+    // ⬅️ Added: Save teacher role in global context
+    setUser({ role: "teacher" });
     router.replace("/welcome_teacher");
   };
 

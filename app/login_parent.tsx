@@ -3,6 +3,8 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useUser } from "../contexts/UserContext";
+
 import {
   Image,
   KeyboardAvoidingView,
@@ -19,11 +21,13 @@ export default function LoginParent() {
   const [secure, setSecure] = useState(true);
   const router = useRouter();
 
+    const { setUser } = useUser();
   const onSignIn = () => {
     if (!CNIC || !password) {
       alert("Please enter CNIC NO and password");
       return;
     }
+    setUser({ role: "parent" }); // save globally
     // Navigate to parent home or dashboard
     router.replace("/welcome_parent"); // You can change this to /parent/home if needed
   };

@@ -34,9 +34,11 @@ export default function StackLayout() {
       <Stack.Screen name="classwork" options={StackHeader('Classwork')} />
       <Stack.Screen name="fees" options={StackHeader('Fees')} />
       <Stack.Screen name="homework" options={StackHeader('Homework')} />
-      <Stack.Screen name="results" options={StackHeader('Results')} />
+      <Stack.Screen name="term_results" options={StackHeader('Term Results')} />
       <Stack.Screen name="teachers" options={StackHeader('Teachers')} />
       <Stack.Screen name="students" options={StackHeader('Students')} />
+      <Stack.Screen name="class_test_resut" options={StackHeader('Test Resuts')} />
+      <Stack.Screen name="feedback" options={StackHeader('Give Feedbacks')} />
     </Stack>
   );
 }

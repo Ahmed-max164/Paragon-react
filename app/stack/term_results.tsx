@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from 'react-native'
 import React from 'react'
 
-const results = () => {
+const term_results = () => {
   return (
     <View className="flex-1 bg-white p-4">
       <ScrollView className="flex-1"
@@ -14,4 +14,4 @@ const results = () => {
   )
 }
 
-export default results
+export default term_results

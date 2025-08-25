@@ -1,62 +1,116 @@
-import React from 'react';
-import { Image, ScrollView, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useUser } from '../../contexts/UserContext'; // ✅ your existing context
 
-const homeworkList = [
+const initialHomeworkList = [
   {
     id: 1,
     subject: 'Mathematics',
     title: 'Complete exercises 5 to 10 from Chapter 3',
     dueDate: 'Due: Aug 5, 2025',
-    status: 'Pending',
+    dateAdded: 'Added: Aug 1, 2025',
   },
   {
     id: 2,
     subject: 'English',
     title: 'Write an essay on climate change',
     dueDate: 'Due: Aug 6, 2025',
-    status: 'Completed',
+    dateAdded: 'Added: Aug 2, 2025',
   },
   {
     id: 3,
     subject: 'Science',
     title: 'Prepare notes on the solar system',
     dueDate: 'Due: Aug 7, 2025',
-    status: 'Pending',
+    dateAdded: 'Added: Aug 3, 2025',
   },
 ];
 
 const Homework = () => {
+  const { user } = useUser(); // ✅ get logged-in user role
+  const [homeworkList, setHomeworkList] = useState(initialHomeworkList);
+
+  const [subject, setSubject] = useState('');
+  const [homeworkText, setHomeworkText] = useState('');
+  const [dueDate, setDueDate] = useState('');
+
+  const addHomework = () => {
+    if (!subject.trim() || !homeworkText.trim() || !dueDate.trim()) return;
+
+    const newHomework = {
+      id: Date.now(),
+      subject: subject.trim(),
+      title: homeworkText.trim(),
+      dueDate: `Due: ${dueDate}`,
+      dateAdded: `Added: ${new Date().toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      })}`,
+    };
+
+    setHomeworkList((prev) => [newHomework, ...prev]);
+    setSubject('');
+    setHomeworkText('');
+    setDueDate('');
+  };
+
   return (
     <View className="flex-1 p-4 bg-white">
       <ScrollView
-        className="flex-1"
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 20 }}
       >
-        {/* 👇 Top Section with Title and Red Card */}
+        {/* ✅ Teacher Form */}
+        {user?.role === 'teacher' && (
+          <View className="mb-6 bg-yellow-100 p-4 rounded-2xl">
+            <Text className="text-lg font-bold mb-2 pt-2 text-blue-900 text-center">Post New Homework</Text>
 
-        <View className="bg-blue-500 rounded-2xl p-6 mb-8 justify-center items-center ">
-           <Text className="text-3xl font-bold text-white mb-2 mt-2"> Homework Diary</Text>
-          <Image
-            source={{
-              uri: 'https://cdn.theatlantic.com/thumbor/b32faVK23Qy1XV5m8hVUgMHKnBQ=/0x0:2000x1125/1600x900/media/img/mt/2021/04/atlantic12/original.jpg',
-            }}
-            className="w-24 h-24 mb-6"
-            resizeMode="contain"
-          />
+            <TextInput
+              placeholder="Subject"
+              value={subject}
+              onChangeText={setSubject}
+              className="border border-gray-300 rounded p-2 mb-2"
+            />
+            <TextInput
+              placeholder="Homework Details"
+              value={homeworkText}
+              onChangeText={setHomeworkText}
+              className="border border-gray-300 rounded p-2 mb-2"
+              multiline
+            />
+            <TextInput
+              placeholder="Due Date"
+              value={dueDate}
+              onChangeText={setDueDate}
+              keyboardType='numeric'
+              className="border border-gray-300 rounded p-2 mb-2"
+            />
 
-        </View>
+            <TouchableOpacity
+              onPress={addHomework}
+              className="bg-green-500 py-2 px-4 rounded"
+            >
+              <Text className="text-white text-center">Add Homework</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
-        {/* 👇 Homework Cards */}
+        {/* ✅ Homework List */}
         {homeworkList.map((hw) => (
           <View
             key={hw.id}
-            className="bg-blue-50 p-4 rounded-2xl mb-4 shadow-sm"
+            className="bg-blue-50 p-4 rounded-2xl mb-4 shadow-sm border border-black"
           >
-            <Text className="text-lg font-semibold text-blue-900">
-              {hw.subject}
-            </Text>
-            <Text className="text-base text-red-800 mt-1">{hw.title}</Text>
+            <View className="flex-row justify-between items-center">
+              <Text className="text-lg font-semibold text-blue-900">
+                {hw.subject}
+              </Text>
+              <Text className="text-sm text-gray-500">{hw.dateAdded}</Text>
+            </View>
+
+            <Text className="text-base text-black mt-1">{hw.title}</Text>
+
             <View className="flex-row justify-between mt-2">
               <Text className="text-sm text-gray-500">{hw.dueDate}</Text>
             </View>

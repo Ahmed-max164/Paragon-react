@@ -1,7 +1,8 @@
-import { View, Text, FlatList } from 'react-native';
-import React, { useState } from 'react';
-import { format } from 'date-fns';
 import { MaterialIcons } from '@expo/vector-icons';
+import { format } from 'date-fns';
+import React, { useState } from 'react';
+import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useUser } from '../../contexts/UserContext';
 
 const initialCirculars = [
   {
@@ -29,6 +30,25 @@ const initialCirculars = [
 
 const CircularsScreen = () => {
   const [circulars, setCirculars] = useState(initialCirculars);
+  const [title, setTitle] = useState('');
+  const [message, setMessage] = useState('');
+
+    const { user } = useUser(); // ✅ get current logged in user role
+  const addNotice = () => {
+    if (!title.trim() || !message.trim()) return;
+
+    const newNotice = {
+      id: Date.now().toString(),
+      title: title.trim(),
+      message: message.trim(),
+      date: new Date().toISOString(), // today's date automatically
+      isRead: false,
+    };
+
+    setCirculars((prev) => [newNotice, ...prev]); // add to top of list
+    setTitle('');
+    setMessage('');
+  };
 
   const markAsRead = (id: string) => {
     setCirculars((prev) =>
@@ -40,36 +60,62 @@ const CircularsScreen = () => {
 
   return (
     <View className="flex-1 p-4 bg-white">
-      
-
+         {/* Add Notice Form */}
+      {user?.role === 'teacher'&& (
+      <View className="mb-6 bg-yellow-100 p-4 rounded-2xl">
+        <Text className="text-lg font-bold mb-2 text-center text-blue-900">Post New Notice</Text>
+        <TextInput
+          placeholder="Title"
+          value={title}
+          onChangeText={setTitle}
+          className="border border-gray-400 rounded p-2 mb-2"
+        />
+        <TextInput
+          placeholder="Message"
+          value={message}
+          onChangeText={setMessage}
+          className="border border-gray-400 rounded p-2 mb-2"
+          multiline
+        />
+        <TouchableOpacity
+          onPress={addNotice}
+          className="bg-green-500 py-2 px-4 rounded pb-2"
+        >
+          <Text className="text-white text-center">Post Notice</Text>
+        </TouchableOpacity>
+      </View>
+      )}
+      {/* List of Notices */}
       <FlatList
         data={circulars}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: 20 }}
         renderItem={({ item }) => (
-          <View className="mb-4 bg-yellow-100 rounded-xl p-4">
-            <View className="flex-row justify-between items-center">
-              <Text className="text-lg font-bold text-blue-500">
-                {item.title}
-              </Text>
-              {!item.isRead && (
-                <Text className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded">
-                  NEW
+          <TouchableOpacity onPress={() => markAsRead(item.id)}>
+            <View className="mb-4 bg-blue-50 rounded-2xl p-4 border border-black">
+              <View className="flex-row justify-between items-center">
+                <Text className="text-lg font-bold text-blue-900">
+                  {item.title}
                 </Text>
-              )}
-            </View>
+                {!item.isRead && (
+                  <Text className="text-xs font-semibold text-red-600 bg-red-100 px-2 py-1 rounded">
+                    NEW
+                  </Text>
+                )}
+              </View>
 
-            <Text className="text-sm text-grey-600 mt-1">{item.message}</Text>
+              <Text className="text-sm text-gray-600 mt-1">{item.message}</Text>
 
-            <View className="flex-row justify-between items-center mt-2">
-              <Text className="text-xs text-gray-400">
-                {format(new Date(item.date), 'MMMM d, yyyy')}
-              </Text>
-              {item.isRead && (
-                <MaterialIcons name="check-circle" size={18} color="green" />
-              )}
+              <View className="flex-row justify-between items-center mt-2">
+                <Text className="text-xs text-gray-400">
+                  {format(new Date(item.date), 'MMMM d, yyyy')}
+                </Text>
+                {item.isRead && (
+                  <MaterialIcons name="check-circle" size={18} color="green" />
+                )}
+              </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
