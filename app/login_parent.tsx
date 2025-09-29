@@ -1,11 +1,11 @@
-// login_parent.tsx
-
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import { useUser } from "../contexts/UserContext";
 
 import {
+  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -16,20 +16,45 @@ import {
 } from "react-native";
 
 export default function LoginParent() {
-  const [CNIC, setcnic] = useState("");
+  const [cnic, setCnic] = useState("");
   const [password, setPassword] = useState("");
   const [secure, setSecure] = useState(true);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-    const { setUser } = useUser();
-  const onSignIn = () => {
-    if (!CNIC || !password) {
-      alert("Please enter CNIC NO and password");
+  const { setUser } = useUser();
+
+  // 🔹 Dummy sign-in function for parents
+  const onSignIn = async () => {
+    if (!cnic || !password) {
+      alert("Please enter CNIC and password");
       return;
     }
-    setUser({ role: "parent" }); // save globally
-    // Navigate to parent home or dashboard
-    router.replace("/welcome_parent"); // You can change this to /parent/home if needed
+
+    setLoading(true);
+
+    // Simulate backend delay
+    setTimeout(async () => {
+      setLoading(false);
+
+      if (cnic === "1234" && password === "1234") {
+        // Save dummy token + role
+        await SecureStore.setItemAsync("userToken", "dummy-parent-token");
+        await SecureStore.setItemAsync("userRole", "parent");
+
+        // Update global context
+        setUser({
+          role: "parent",
+          token: "dummy-parent-token",
+          name: "Test Parent",
+        });
+
+        // Navigate to parent dashboard
+        router.replace("/welcome_parent");
+      } else {
+        alert("Invalid credentials");
+      }
+    }, 1000);
   };
 
   return (
@@ -38,7 +63,7 @@ export default function LoginParent() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View className="flex-1 items-center px-4 pt-8">
-        <Text className="text-center text-3xl font-bold text-blue-950 mt-10 mb-4">
+        <Text className="text-center text-3xl font-bold text-blue-900 mt-10 mb-4">
           Paragon Public School
         </Text>
 
@@ -49,10 +74,10 @@ export default function LoginParent() {
         />
 
         <View className="w-full mt-2">
-          <Text className="text-gray-700 mb-1">CNIC NO</Text>
+          <Text className="text-gray-700 mb-1">CNIC No</Text>
           <TextInput
-            value={CNIC}
-            onChangeText={setcnic}
+            value={cnic}
+            onChangeText={setCnic}
             placeholder="Your CNIC Number"
             keyboardType="numeric"
             autoCapitalize="none"
@@ -86,9 +111,16 @@ export default function LoginParent() {
 
           <TouchableOpacity
             onPress={onSignIn}
+            disabled={loading}
             className="mt-6 bg-blue-600 rounded-xl py-3 items-center"
           >
-            <Text className="text-white text-base font-semibold">Sign In</Text>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text className="text-white text-base font-semibold">
+                Sign In
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>

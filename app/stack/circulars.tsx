@@ -1,7 +1,7 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import React, { useState } from 'react';
-import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
 import { useUser } from '../../contexts/UserContext';
 
 const initialCirculars = [
@@ -85,6 +85,17 @@ const CircularsScreen = () => {
         </TouchableOpacity>
       </View>
       )}
+     {user?.role === 'parent' && (
+  <ImageBackground
+    source={{ uri: 'https://avk.edu.in/wp-content/uploads/2023/06/Abstract-Grand-Opening-Announcement-Free-Instagram-Post-1200-%C3%97-600-px.png' }}
+    className="mb-6 rounded-2xl overflow-hidden"
+    style={{height: 180}}
+    imageStyle={{ borderRadius: 16 }} // to round corners of bg image
+  >
+    
+  </ImageBackground>
+)}
+
       {/* List of Notices */}
       <FlatList
         data={circulars}

@@ -1,11 +1,11 @@
-// login.tsx
-
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import { useUser } from "../contexts/UserContext";
 
 import {
+  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -16,22 +16,44 @@ import {
 } from "react-native";
 
 export default function Login() {
-  const [employno, setemployno] = useState("");
+  const [employno, setEmployno] = useState("");
   const [password, setPassword] = useState("");
   const [secure, setSecure] = useState(true);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-    const { setUser } = useUser();
-  const onSignIn = () => {
-    if (!employno || !password) {
-      alert("Please enter employee number and password");
-      return;
+  const { setUser } = useUser();
+
+const onSignIn = async () => {
+  if (!employno || !password) {
+    alert("Please enter employee number and password");
+    return;
+  }
+
+  setLoading(true);
+
+  // 🔹 Fake backend delay
+  setTimeout(async () => {
+    setLoading(false);
+
+    if (employno === "1234" && password === "1234") {
+      // Save dummy token
+      await SecureStore.setItemAsync("userToken", "dummy-teacher-token");
+      await SecureStore.setItemAsync("userRole", "teacher");
+
+      setUser({
+        role: "teacher",
+        token: "dummy-teacher-token",
+        name: "Test Teacher",
+      });
+
+      router.replace("/welcome_teacher");
+    } else {
+      alert("Invalid credentials");
     }
-    
-    // ⬅️ Added: Save teacher role in global context
-    setUser({ role: "teacher" });
-    router.replace("/welcome_teacher");
-  };
+  }, 1000);
+};
+
 
   return (
     <KeyboardAvoidingView
@@ -39,7 +61,7 @@ export default function Login() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <View className="flex-1 items-center px-4 pt-8">
-        <Text className="text-center text-3xl font-bold text-blue-950 mt-10 mb-4">
+        <Text className="text-center text-3xl font-bold text-blue-900 mt-10 mb-4">
           Paragon Public School
         </Text>
 
@@ -53,7 +75,7 @@ export default function Login() {
           <Text className="text-gray-700 mb-1">Employee No</Text>
           <TextInput
             value={employno}
-            onChangeText={setemployno}
+            onChangeText={setEmployno}
             placeholder="Your Employee Number"
             keyboardType="numeric"
             autoCapitalize="none"
@@ -87,12 +109,20 @@ export default function Login() {
 
           <TouchableOpacity
             onPress={onSignIn}
+            disabled={loading}
             className="mt-6 bg-blue-600 rounded-xl py-3 items-center"
           >
-            <Text className="text-white text-base font-semibold">Sign In</Text>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text className="text-white text-base font-semibold">
+                Sign In
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
     </KeyboardAvoidingView>
   );
 }
+  

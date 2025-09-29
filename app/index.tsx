@@ -2,11 +2,22 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { useUser } from "../contexts/UserContext";
 
 export default function Index() {
   const router = useRouter();
+  const { setUser } = useUser(); 
 
-  return (
+  const handleRoleSelect = (role: "teacher" | "parent") => {
+    setUser({ role }); // save role globally
+    if (role === "teacher") {
+      router.push("/login");
+    } if (role === "parent") {
+      router.push("/login_parent");
+    }
+  };
+
+  return (  
     <View className="flex-1 bg-white px-4 pt-10">
       {/* Header */}
       <View className="flex-row items-center mb-6">
@@ -31,7 +42,7 @@ export default function Index() {
         <View className="flex-row gap-x-6">
           {/* Box 1 */}
           <TouchableOpacity
-            onPress={() => router.push("/login")}
+             onPress={() => handleRoleSelect("teacher")}
             className="w-32 h-32 bg-blue-500 rounded-xl justify-center items-center border-2 border-blue-800"
           >
             <MaterialIcons name="login" size={36} color="white" />
@@ -40,7 +51,7 @@ export default function Index() {
 
           {/* Box 2 */}
           <TouchableOpacity
-            onPress={() => router.push("/login_parent")}
+          onPress={() => handleRoleSelect("parent")} 
             className="w-32 h-32 bg-yellow-500 rounded-xl justify-center items-center border-2 border-yellow-700"
           >
             <MaterialIcons name="person-add" size={36} color="white" />

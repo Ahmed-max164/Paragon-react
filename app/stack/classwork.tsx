@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useUser } from '../../contexts/UserContext'; // ✅ your existing context
 
 const initialClassworkList = [
@@ -94,6 +94,16 @@ const Classwork = () => {
               <Text className="text-white text-center">Add Classwork</Text>
             </TouchableOpacity>
           </View>
+        )}
+        {user?.role === 'parent' && (
+          <ImageBackground
+            source={{ uri: 'https://avk.edu.in/wp-content/uploads/2023/06/Abstract-Grand-Opening-Announcement-Free-Instagram-Post-1200-%C3%97-600-px.png' }}
+            className="mb-6 rounded-2xl overflow-hidden"
+            style={{height: 180}}
+            imageStyle={{ borderRadius: 16 }} // to round corners of bg image
+          >
+            
+          </ImageBackground>
         )}
 
         {/* ✅ Homework List */}
